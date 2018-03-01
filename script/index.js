@@ -27,9 +27,6 @@ function callback(data){
 		newlab.innerHTML=info[i];
 		alllab.appendChild(newlab);
 	}
-	$("li").mouseover(function(){
-		listobj.now = this.getAttribute('lid')
-	});
 }
 function go(wd){
 	location.href='https://www.baidu.com/s?wd='+wd
