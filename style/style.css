@@ -1,0 +1,147 @@
+body{
+	margin: 0;
+	width: 100vw;
+	height: 100vh;
+}
+.main{
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	text-align: center;
+}
+.main .moe{
+	max-width: 350px;
+	max-height: 350px;
+}
+.main form{
+	position: relative;
+	top:-20px;
+	height: 32px;
+	display: none;
+}
+.main form .imgicon{
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	right: 10px;
+	height: 20px;
+	cursor: pointer;
+}
+.main form input{
+	width: 600px;
+	height: 30px;
+	padding: 0 0 0 10px;
+	outline: none;
+	border:1px solid #97c9eb;
+	font-size: 18px;
+}
+.main ul{
+	margin: 0;
+	padding:0;
+	border-width: 0px 1px 1px 1px;
+	border-style: solid;
+	border-color: #eee;
+}
+.main li{
+	margin: 0;
+	padding:0;
+	list-style: none;
+	text-align: left;
+	padding: 2px 10px;
+	border-bottom: 1px solid #eee;
+	cursor: pointer;
+	font-size: 15px;
+}
+.main li:hover{
+	background-color: #97c9eb;
+}
+.main .input_url{
+	font-size: 12px;
+	color: #888;
+}
+.main .upload_img{
+	min-height: 200px;
+	position: relative;
+	border: 1px #97c9eb solid;
+	cursor: pointer;
+}
+.main .upload_img p{
+	margin:5px 0;
+	pointer-events: none;
+}
+.main .upload_img .upload_img_file{/*拖拽框*/
+	position: relative;
+	margin: 0 auto;
+	width: 80%;
+	min-height: 100px;
+	border: dashed 5px #eee;
+	pointer-events: none;
+}
+.main .upload_img .upload_img_logo{/*拖拽框中间的图标*/
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	height: 50px;
+	pointer-events: none;
+}
+.main .upload_img .upload_img_example{/*预览*/
+	max-height: 100px;
+	max-height: 230px;
+	pointer-events: none;
+}
+.main .back{
+	position: absolute;
+	bottom: 1px;
+	right: 1px;
+	width: 50px;
+	height: 50px;
+	cursor: pointer;
+}
+.main .back:hover{
+	background-color: #eee;
+}
+.main .back img{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	height: 20px;
+}
+.main .searching{/*图片搜索按钮*/
+	height: 32px;
+	position: absolute;
+	right: 0;
+	width: 60px;
+	background-color: #97c9eb;
+	line-height: 32px;
+	top: 0;
+	cursor: pointer;
+}
+.main .copyurl{/*图片搜索按钮*/
+	position: absolute;
+	right:70px;
+	line-height: 32px;
+	top: 0;
+	cursor: pointer;
+}
+.main .copyurl:hover{
+	text-decoration: underline;
+}
+.main .qipao{
+	position: absolute;
+	width: 75px;
+	height: 75px;
+	right: 60px;
+	top: -65px;
+	background-image: url(../img/qipao.svg);
+	background-size:cover;
+	font-size: 12px;
+	line-height: 60px;
+	opacity: 0;
+	transition: opacity 1s;
+}
+.main .qipao img{
+	width: 50px;
+	height: 20px;
+}

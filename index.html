@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>问一下度娘，你就知道～</title>
+	<meta charset="utf-8">
+	<link rel="icon" href="https://favicon.yandex.net/favicon/baidu.com" />
+	<script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery
+/jquery-1.4.min.js"></script>
+	<script type="text/javascript" src="script/clipboard.min.js"></script>
+	<link href="./style/style.css" rel="stylesheet">
+</head>
+<body onclick="document.getElementById('input').focus();document.getElementById('input_url').focus()">
+	<div class="main">
+		<img class='moe' id = 'img' src="" onload="document.getElementById('text_search').style.display='block';document.getElementById('input').focus()">
+		<div>
+			<form action='https://www.baidu.com/s' id='text_search'>
+				<input type="text" name="wd" id="input" autocomplete="off" oninput="getinfo(document.getElementById('input').value)" onpropertychange="getinfo(document.getElementById('input').value)">
+				<img class="imgicon" src="./img/pic.svg" onclick="document.getElementById('text_search').style.display='none';document.getElementById('img_search').style.display='block';document.getElementById('input_url').focus()">
+				<div class="list">
+					<ul id='list'>
+						<!-- <li>2333</li> -->
+					</ul>
+				</div>
+			</form>
+			<form action='https://image.baidu.com/n/pc_search' id='img_search'>
+				<input type="text" name="queryImageUrl" class="input_url" id="input_url" autocomplete="off" placeholder=‘在此输入图片url’ >
+				<div class="searching" onclick="gosearimg()">搜索</div>
+				<div id="copyurl" class="copyurl" onclick="copyurl()" style="display: none;">复制链接</div>
+				<div class="qipao" id="qipao">复制成功</div>
+				<div style="position: relative;">
+					<label for="selectfile" class="selectfile">
+						<div class="upload_img" id="upload_img">
+							<p>拖拽图片或点击此处</p>
+							<div class="upload_img_file" id="upload_img_file">
+								<img class="upload_img_logo" src="./img/add.svg" id="upload_img_logo">
+							</div>
+							<input type="file" id="selectfile" style="display: none">
+						</div>
+					</label>
+					<div class='back' onclick="document.getElementById('img_search').style.display='none';document.getElementById('text_search').style.display='block';document.getElementById('input').focus()">
+						<img src="./img/back.svg" class="back">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+<script src='./script/index.js'></script>
+</html>
