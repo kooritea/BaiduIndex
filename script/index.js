@@ -42,7 +42,7 @@ function go(wd){
 }
 function gosearimg(){
 	if(document.getElementById('input_url').value){
-		location.href='https://image.baidu.com/n/pc_search?queryImageUrl='+document.getElementById('input_url').value
+		location.href=document.getElementById('source').value+encodeURIComponent(document.getElementById('input_url').value)
 	}
 }
 var listobj={mouse:(-1)}

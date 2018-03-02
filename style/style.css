@@ -71,7 +71,7 @@ body{
 }
 .main .upload_img .upload_img_file{/*拖拽框*/
 	position: relative;
-	margin: 0 auto;
+	margin: 0 auto 35px auto;
 	width: 80%;
 	min-height: 100px;
 	border: dashed 5px #eee;
@@ -127,6 +127,25 @@ body{
 }
 .main .copyurl:hover{
 	text-decoration: underline;
+}
+.main .source{
+	position: absolute;
+	top: 3.5px;
+	right: -110px;
+	appearance:none;
+	-moz-appearance:none;
+	-webkit-appearance:none;
+	width: 100px;
+	height: 25px;
+	padding-left: 10px;
+	text-align: center;
+	line-height: 25px;
+	background: url("../img/more.svg") no-repeat scroll right center transparent;
+	background-size: 20px;
+	background-color: #97c9eb;
+	background-position-x:75px; 
+	outline: none;
+	border: none;
 }
 .main .qipao{
 	position: absolute;
