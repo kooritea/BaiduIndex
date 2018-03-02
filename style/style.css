@@ -86,8 +86,8 @@ body{
 	pointer-events: none;
 }
 .main .upload_img .upload_img_example{/*预览*/
-	max-height: 100px;
-	max-height: 230px;
+	max-height: 300px;
+	max-width: 500px;
 	pointer-events: none;
 }
 .main .back{

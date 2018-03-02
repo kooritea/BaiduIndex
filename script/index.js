@@ -183,3 +183,10 @@ function copyurl(){
 		document.getElementById('qipao').style.opacity=0;
 	},1000)
 }
+function changesource(){
+	var a = document.getElementById('source').value.match(/(.*?)\?(.*?)=/)
+	var source = a[1]
+	var query = a[2]
+	document.getElementById('img_search').setAttribute('action',source)
+	document.getElementById('input_url').setAttribute('name',query)
+}

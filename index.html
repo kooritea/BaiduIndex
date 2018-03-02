@@ -25,10 +25,10 @@
 			<form action='https://image.baidu.com/n/pc_search' id='img_search'>
 				<input type="text" name="queryImageUrl" class="input_url" id="input_url" autocomplete="off" placeholder=‘在此输入图片url’ >
 				<div class="searching" onclick="gosearimg()">搜索</div>
-				<select id="source" class="source">
+				<select id="source" class="source" onchange="changesource()">
 					<option value ="https://image.baidu.com/n/pc_search?queryImageUrl=">百度</option>
 					<option value="https://images.google.com/searchbyimage?image_url=">Google</option>
-					<option value ="http://saucenao.com/search.php?db=999&url=">sauceNAO</option>
+					<option value ="http://saucenao.com/search.php?url=">sauceNAO</option>
 					<option value="http://iqdb.org/?url=">iqdb</option>
 					<option value="http://tineye.com/search/?url=">TinEye</option>
 				</select>
