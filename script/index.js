@@ -8,7 +8,9 @@ document.getElementById('input').onblur = function(){
 }
 var img = ['./img/moe1.png','./img/moe2.png']
 document.getElementById('img').src = img[((Math.floor(Math.random()*10)>4)?1:0)];
+var input
 function getinfo(){
+	input = document.getElementById('input').value;
 	$.ajax({
 		type: 'GET',
 		url: 'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd='+document.getElementById('input').value+'&json=1&p=3&sid=1433_25809_21082_17001&csor=1&cb=callback',
@@ -27,6 +29,13 @@ function callback(data){
 		newlab.innerHTML=info[i];
 		alllab.appendChild(newlab);
 	}
+	$("li").mouseover(function(){
+		$('li').css('background-color','')
+		listobj.mouse=this.getAttribute('lid')
+	});
+	$('ul').mouseleave(function(){
+		listobj.mouse=-1
+	})
 }
 function go(wd){
 	location.href='https://www.baidu.com/s?wd='+wd
@@ -36,7 +45,7 @@ function gosearimg(){
 		location.href='https://image.baidu.com/n/pc_search?queryImageUrl='+document.getElementById('input_url').value
 	}
 }
-var listobj={}
+var listobj={mouse:(-1)}
 function defineReactive(data, key, val) {
 	Object.defineProperty(data, key, {
 	    enumerable: true, // 可枚举
@@ -47,7 +56,7 @@ function defineReactive(data, key, val) {
 	    set: function(newVal) {
 	    	$('li').css('background-color','#fff')
 	        val = newVal;
-	        if(newVal>-1){
+	        if(newVal>-1&&newVal<$('li').length){
 	        	$('li')[newVal].style = 'background-color: #97c9eb;'
 	        	document.getElementById('input').value =  $('li')[newVal].innerHTML
 	        }
@@ -58,14 +67,34 @@ defineReactive(listobj,'now',(-1))
 document.onkeydown = function(event){
 	var e = event || window.event || arguments.callee.caller.arguments[0];
 	if(e && e.keyCode==38){//上
+		if(listobj.mouse!=-1){
+			listobj.now=listobj.mouse
+			listobj.mouse=-1
+		}
 		if(listobj.now > 0){
 			listobj.now --
+			return
 		}
-		return
+		if(listobj.now == 0){
+			$('li').css('background-color','#fff')
+			document.getElementById('input').value=input 
+			listobj.now--
+		}
+		
 	}
 	if(e && e.keyCode==40){//下
+		if(listobj.mouse!=-1){
+			listobj.now=listobj.mouse
+			listobj.mouse=-1
+		}
 		if(listobj.now < ($('li').length-1)){
 			listobj.now ++
+			return
+		}
+		if(listobj.now == ($('li').length-1)){
+			$('li').css('background-color','#fff')
+			document.getElementById('input').value=input
+			listobj.now++
 		}
 		return
 	}
