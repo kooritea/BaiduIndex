@@ -4,7 +4,7 @@
     <img class="imgicon" src="../assets/pic.svg" v-on:click="$store.state.search='img'">
     <div class="list">
       <ul id='list'>
-        <li v-for="(sug,index) in suggets" v-bind:class='{highlighted:(highlighted===index)}' v-on:mouseover="highlighted=index">{{sug}}</li>
+        <li v-for="(sug,index) in suggets" v-bind:class='{highlighted:(highlighted===index)}' v-on:mouseover="highlighted=index" v-on:click="submit">{{sug}}</li>
       </ul>
     </div>
   </form>
@@ -35,6 +35,9 @@ export default {
       if(this.highlighted === (-1)||this.highlighted === (this.suggets.length)){
         this.input = this.input_tem;
       }
+    },
+    submit(){
+      location.href='https://www.baidu.com/s?wd='+this.input
     },
     async getinfo(){//获取百度suggets
       this.input_tem = this.input;

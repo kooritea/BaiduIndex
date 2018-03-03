@@ -1,5 +1,5 @@
 <template>
- <form action='https://image.baidu.com/n/pc_search' id='img_search'>
+ <form action='https://image.baidu.com/n/pc_search' id='img_search' v-on:submit="submit">
   <input type="text" name="queryImageUrl" class="input_url" id="input_url" autocomplete="off" placeholder='在此输入图片url' v-model='input_url'>
   <a v-bind:href="searching"><div class="searching">搜索</div></a>
   <select id="source" class="source" v-model='source'>
@@ -9,8 +9,8 @@
     <option value="http://iqdb.org/?url=">iqdb</option>
     <option value="http://tineye.com/search/?url=">TinEye</option>
   </select>
-  <div id="copyurl" class="copyurl" onclick="copyurl()" style="display: none;">复制链接</div>
-  <div class="qipao" id="qipao">复制成功</div>
+  <div id="copyurl" class="copyurl" v-on:click="copyurl()" v-if='input_url'>复制链接</div>
+  <div class="prompt" ref="prompt" >复制成功</div>
   <div style="position: relative;">
     <label for="selectfile" class="selectfile">
       <div class="upload_img" id="upload_img" v-on:dragenter='upload_img_logo=false' v-on:dragleave='upload_img_logo=true' v-on:drop='drop' v-on:dragover='dragover'>
@@ -30,6 +30,7 @@
 </form>
 </template>
 <script>
+import Clipboard from 'clipboard';
 export default {
   name: 'SearchImg',
   data () {
@@ -39,6 +40,7 @@ export default {
       upload_img_logo:true,
       upload_img_example:null,
       source:'https://image.baidu.com/n/pc_search?queryImageUrl=', //搜索源
+      prompt:null
     }
   },
   computed:{
@@ -52,6 +54,10 @@ export default {
   	}
   },
   methods:{
+    submit(){//提交表单
+      // return this.searching !== '#'?true : false
+      return false
+    },
   	drop(e){//拖拽释放后出发
   		e.preventDefault();
   		this.upload_img(e.dataTransfer.files[0])
@@ -59,8 +65,8 @@ export default {
   		return false
   	},
   	dragover(e){//坑
-		e.preventDefault();
-		return true;
+  		e.preventDefault();
+  		return true;
   	},
   	async upload_img(file){
   		file = file||this.$refs.selectfile.files[0]
@@ -68,39 +74,58 @@ export default {
   		this.example(file)//显示预览
   	},
   	async example(file){
-		let reader = new FileReader();
-		reader.readAsDataURL(file);
-		this.upload_img_example = await (new Promise(async function(reslove,reject){
-				reader.onload = function (e) {
-					reslove(this.result);
-				}
-			}))
+  		let reader = new FileReader();
+  		reader.readAsDataURL(file);
+  		this.upload_img_example = await (new Promise(async function(reslove,reject){
+  				reader.onload = function (e) {
+  					reslove(this.result);
+  				}
+  			}))
   	},
   	async up(file){//上传至新浪
-		let api = this.api||(await this.getapi())
-	   	return new Promise(async function(reslove,reject){
-	   		let data = new FormData();
-	   		data.append("file", file);
-	   		let s = new XMLHttpRequest()
-	   		s.open("POST", api, true);
-	   		s.onreadystatechange=function(){
-				if (s.readyState == 4) {
-					let g = s.responseText;
-					if((s.getResponseHeader("Content-Type") || "").match(/json/)){
-						let  pid = (JSON.parse(g)).wbpid
-						reslove('http://ww2.sinaimg.cn/large/'+pid)
-					}
-					else{
-						alert('上传失败')
-					}
-				}
-			}
-			s.send(data);
-	   	})
-	},
-	async getapi(){//获取上传地址
-		return 'http://'+(await this.axios.get('http://danmu.fm/api/hosts')).data.cmcc.match(/[\d\.]+/)+':672/v1/upload';
-	}
+  		let api = this.api||(await this.getapi())
+     	return new Promise(async function(reslove,reject){
+     		let data = new FormData();
+     		data.append("file", file);
+     		let s = new XMLHttpRequest()
+     		s.open("POST", api, true);
+     		s.onreadystatechange=function(){
+    			if (s.readyState == 4) {
+    				let g = s.responseText;
+    				if((s.getResponseHeader("Content-Type") || "").match(/json/)){
+    					let  pid = (JSON.parse(g)).wbpid
+    					reslove('http://ww2.sinaimg.cn/large/'+pid)
+    				}
+    				else{
+    					alert('上传失败')
+    				}
+    			}
+    		}
+  			s.send(data);
+  	 })
+  	},
+    async copyurl(){
+      let url = this.input_url
+      new Clipboard('.copyurl',{
+        text:function(trigger){
+          return url
+        }
+      })
+      this.showprompt('复制成功')
+    },
+    async showprompt(prompt){
+      this.prompt=prompt
+      this.$refs.prompt.style.opacity=1
+      await new Promise(async function(reslove,reject){
+        setTimeout(function(){
+          reslove(1)
+        },1000)
+      })
+      this.$refs.prompt.style.opacity=0
+    },
+  	async getapi(){//获取上传地址
+  		return 'http://'+(await this.axios.get('http://danmu.fm/api/hosts')).data.cmcc.match(/[\d\.]+/)+':672/v1/upload';
+  	}
   },
   mounted(){
    //this.api = this.getapi()
@@ -204,20 +229,20 @@ export default {
   outline: none;
   border: none;
 }
-.main .qipao{
+.main .prompt{
   position: absolute;
   width: 75px;
   height: 75px;
   right: 60px;
   top: -65px;
-  background-image: url(../assets/qipao.svg);
+  background-image: url(../assets/prompt.svg);
   background-size:cover;
   font-size: 12px;
   line-height: 60px;
   opacity: 0;
   transition: opacity 1s;
 }
-.main .qipao img{
+.main .prompt img{
   width: 50px;
   height: 20px;
 }
