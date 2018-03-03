@@ -1,6 +1,6 @@
 <template>
   <form action='https://www.baidu.com/s' id='text_search'>
-    <input type="text" name="wd" id="input" autocomplete="off" v-model='input' @keyup.up="chighlighted(1)" @keyup.down="chighlighted(0)" v-on:input="getinfo()" v-on:propertychange="getinfo()">
+    <input type="text" name="wd" id="input" autocomplete="off" v-model='input' @keyup.up="chighlighted(1)" @keyup.down="chighlighted(0)" v-on:input="getinfo()" v-on:propertychange="getinfo()" v-focus>
     <img class="imgicon" src="../assets/pic.svg" v-on:click="$store.state.search='img'">
     <div class="list">
       <ul id='list'>
@@ -52,6 +52,13 @@ export default {
     highlighted(){
       if(this.highlighted !== (-1)&&this.highlighted !== (this.suggets.length)){
         this.input=this.suggets[this.highlighted]
+      }
+    }
+  },
+  directives: {
+    focus:{
+      inserted: function (el) {
+        el.focus();
       }
     }
   }

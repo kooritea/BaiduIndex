@@ -1,6 +1,6 @@
 <template>
  <form action='https://image.baidu.com/n/pc_search' id='img_search' v-on:submit="submit">
-  <input type="text" name="queryImageUrl" class="input_url" id="input_url" autocomplete="off" placeholder='在此输入图片url' v-model='input_url'>
+  <input type="text" name="queryImageUrl" class="input_url" id="input_url" autocomplete="off" placeholder='在此输入图片url' v-model='input_url' v-focus>
   <a v-bind:href="searching"><div class="searching">搜索</div></a>
   <select id="source" class="source" v-model='source'>
     <option value ="https://image.baidu.com/n/pc_search?queryImageUrl=">百度</option>
@@ -132,6 +132,13 @@ export default {
   },
   watch:{
     
+  },
+  directives: {
+    focus:{
+      inserted: function (el) {
+        el.focus();
+      }
+    }
   }
 }
 </script>
