@@ -27,6 +27,7 @@ export default {
   },
   methods:{
     chighlighted(type){//更改高亮位置
+      this.input_status=false;
       if(type&&this.highlighted >= 0){//up
         this.highlighted --
       }
