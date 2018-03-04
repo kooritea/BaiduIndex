@@ -1,5 +1,5 @@
 <template>
- <form action='https://image.baidu.com/n/pc_search' id='img_search' v-on:submit="submit">
+ <form action='https://image.baidu.com/n/pc_search' id='img_search'>
   <input type="text" name="queryImageUrl" class="input_url" id="input_url" autocomplete="off" placeholder='在此输入图片url' v-model='input_url' v-focus>
   <a v-bind:href="searching"><div class="searching">搜索</div></a>
   <select id="source" class="source" v-model='source'>
@@ -37,7 +37,7 @@ export default {
     return {
       input_url:'',
       api:null,
-      upload_img_logo:true,
+      upload_img_logo:true,//true时显示add.svg或者example，false时显示file.svg
       upload_img_example:null,
       source:'https://image.baidu.com/n/pc_search?queryImageUrl=', //搜索源
       prompt:null
@@ -54,14 +54,12 @@ export default {
   	}
   },
   methods:{
-    submit(){//提交表单
-      // return this.searching !== '#'?true : false
-      return false
-    },
   	drop(e){//拖拽释放后出发
   		e.preventDefault();
+      this.input_url = '';//清空
+      this.upload_img_example=null;//显示文件svg
   		this.upload_img(e.dataTransfer.files[0])
-  		this.upload_img_logo=true;
+      this.upload_img_logo=true;
   		return false
   	},
   	dragover(e){//坑
@@ -70,7 +68,6 @@ export default {
   	},
   	async upload_img(file){
   		file = file||this.$refs.selectfile.files[0]
-      this.input_url = '';//清空
   		this.input_url = await this.up(file)
   		this.example(file)//显示预览
   	},
@@ -78,10 +75,10 @@ export default {
   		let reader = new FileReader();
   		reader.readAsDataURL(file);
   		this.upload_img_example = await (new Promise(async function(reslove,reject){
-  				reader.onload = function (e) {
-  					reslove(this.result);
-  				}
-  			}))
+				reader.onload = function (e) {
+					reslove(this.result);
+				}
+			}))
   	},
   	async up(file){//上传至新浪
   		let api = this.api||(await this.getapi())
@@ -128,8 +125,8 @@ export default {
   		return 'http://'+(await this.axios.get('http://danmu.fm/api/hosts')).data.cmcc.match(/[\d\.]+/)+':672/v1/upload';
   	}
   },
-  mounted(){
-   //this.api = this.getapi()
+  async mounted(){
+   this.api = await this.getapi()
   },
   watch:{
     
