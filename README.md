@@ -1,4 +1,4 @@
-# baiduindex
+# BaiduIndex
 
 > 一个自定义百度首页
 
@@ -8,9 +8,14 @@ v1.x 实在太乱了看不下去了
 
 ## 用法
 
-直接打开dist文件夹的index就可以了
+下载[构建好的文件](https://github.com/kooritea/BaiduIndex/releases/tag/v2.0.2)
+直接用浏览器打开index.html就可以了，然后添加到标签
 
 推荐使用nginx等静态文件服务器，防止意想不到的错误
+
+## 预览
+![pic](http://ww2.sinaimg.cn/large/005zWjpngy1fp0plow4s7j31gb0prtax)
+![pic](http://ww2.sinaimg.cn/large/005zWjpngy1fp0pn48g0bj31gf0prdii)
 
 #### 碎碎念
 

@@ -70,6 +70,7 @@ export default {
   	},
   	async upload_img(file){
   		file = file||this.$refs.selectfile.files[0]
+      this.input_url = '';//清空
   		this.input_url = await this.up(file)
   		this.example(file)//显示预览
   	},
