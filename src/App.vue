@@ -3,10 +3,8 @@
    <div class="main">
     <img class='moe' id = 'img' v-bind:src='moeurl'>
     <div>
-    <keep-alive>
       <SearchText v-if="$store.state.search==='text'"/>
       <SearchImg v-if="$store.state.search==='img'"/>
-    </keep-alive>
     </div>
    </div>
   </div>

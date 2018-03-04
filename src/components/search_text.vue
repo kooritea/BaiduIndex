@@ -2,7 +2,7 @@
   <form action='https://www.baidu.com/s' id='text_search'>
     <input type="text" name="wd" id="input" autocomplete="off" v-model='input' @keyup.up="chighlighted(1)" @keyup.down="chighlighted(0)" v-on:input="getinfo()" v-on:propertychange="getinfo()" v-focus>
     <img class="imgicon" src="../assets/pic.svg" v-on:click="$store.state.search='img'">
-    <div class="list">
+    <div class="list" v-on:mousemove='input_status=false'>
       <ul id='list'>
         <li v-for="(sug,index) in suggets" v-bind:class='{highlighted:(highlighted===index)}' v-on:mouseover="highlighted=index" v-on:click="submit">{{sug}}</li>
       </ul>
@@ -18,7 +18,8 @@ export default {
       input:'',
       input_tem:'',
       suggets:[],
-      highlighted:(-1)
+      highlighted:(-1),
+      input_status:false//再输入状态时为true,防止在输入时鼠标触碰suggets
     }
   },
   computed:{
@@ -40,6 +41,7 @@ export default {
       location.href='https://www.baidu.com/s?wd='+this.input
     },
     async getinfo(){//获取百度suggets
+      this.input_status=true;
       this.input_tem = this.input;
       let json = await this.$jsonp('https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su',{
         wd:this.input,
@@ -50,7 +52,7 @@ export default {
   },
   watch:{
     highlighted(){
-      if(this.highlighted !== (-1)&&this.highlighted !== (this.suggets.length)){
+      if(this.highlighted !== (-1)&&this.highlighted !== (this.suggets.length)&&!this.input_status){
         this.input=this.suggets[this.highlighted]
       }
     }
