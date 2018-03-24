@@ -3,7 +3,7 @@
     <input type="text" name="wd" id="input" autocomplete="off" v-model='input' @keyup.up="chighlighted(1)" @keyup.down="chighlighted(0)" v-on:input="getinfo()" v-on:propertychange="getinfo()" v-focus>
     <img class="imgicon" src="../assets/pic.svg" v-on:click="$store.state.search='img'">
     <div class="list" v-on:mousemove='input_status=false'>
-      <ul id='list'>
+      <ul id='list' v-on:mouseout="highlightedb=highlighted;highlighted=(-1)">
         <li v-for="(sug,index) in suggets" v-bind:class='{highlighted:(highlighted===index)}' v-on:mouseover="highlighted=index" v-on:click="submit">{{sug}}</li>
       </ul>
     </div>
@@ -18,7 +18,8 @@ export default {
       input:'',
       input_tem:'',
       suggets:[],
-      highlighted:(-1),
+      highlighted:(-1),//高亮位置
+      highlightedb:null,//高亮位置暂存
       input_status:false//再输入状态时为true,防止在输入时鼠标触碰suggets
     }
   },
@@ -27,11 +28,15 @@ export default {
   },
   methods:{
     chighlighted(type){//更改高亮位置
-      this.input_status=false;
-      if(type&&this.highlighted >= 0){//up
+      if(this.highlightedb){//恢复鼠标离开选项前的位置
+        this.highlighted = this.highlightedb;
+        this.highlightedb = null;
+      }
+      this.input_status = false;
+      if(type && this.highlighted >= 0){//up
         this.highlighted --
       }
-      if(!type&&this.highlighted<this.suggets.length){//down
+      if(!type && this.highlighted<this.suggets.length){//down
         this.highlighted ++
       }
       if(this.highlighted === (-1)||this.highlighted === (this.suggets.length)){
@@ -53,8 +58,11 @@ export default {
   },
   watch:{
     highlighted(){
-      if(this.highlighted !== (-1)&&this.highlighted !== (this.suggets.length)&&!this.input_status){
-        this.input=this.suggets[this.highlighted]
+      if(this.highlighted !== (-1) && this.highlighted !== (this.suggets.length) && !this.input_status){
+        this.input = this.suggets[this.highlighted]
+      }
+      if(this.highlighted === (-1)){
+        this.input = this.input_tem;
       }
     }
   },
