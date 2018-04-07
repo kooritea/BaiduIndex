@@ -19,6 +19,7 @@
           <img class="upload_img_logo" src="../assets/add.svg" v-if="upload_img_logo&&!upload_img_example">
           <img class="upload_img_logo" src="../assets/file.svg" v-if="!upload_img_logo">
           <img class="upload_img_example" v-if="upload_img_example&&upload_img_logo" v-bind:src="upload_img_example">
+          <div class="upload_img_example_bg" v-if="upload_img_example&&upload_img_logo&&upload_img_progress!=100" v-bind:style="{height:(100-upload_img_progress)+'%'}"></div>
         </div>
         <input type="file" id="selectfile" ref="selectfile" style="display: none" v-on:change="upload_img()">
       </div>
@@ -39,6 +40,7 @@ export default {
       api:null,
       upload_img_logo:true,//true时显示add.svg或者example，false时显示file.svg
       upload_img_example:null,
+      upload_img_progress:0,//上穿进度
       source:'https://image.baidu.com/n/pc_search?queryImageUrl=', //搜索源
       prompt:null
     }
@@ -59,7 +61,6 @@ export default {
       this.input_url = '';//清空
       this.upload_img_example=null;//显示文件svg
   		this.upload_img(e.dataTransfer.files[0])
-      this.upload_img_logo=true;
   		return false
   	},
   	dragover(e){//坑
@@ -68,8 +69,8 @@ export default {
   	},
   	async upload_img(file){
   		file = file||this.$refs.selectfile.files[0]
+      this.example(file)//显示预览
   		this.input_url = await this.up(file)
-  		this.example(file)//显示预览
   	},
   	async example(file){
   		let reader = new FileReader();
@@ -79,9 +80,12 @@ export default {
 					reslove(this.result);
 				}
 			}))
+      this.upload_img_logo = true;
   	},
   	async up(file){//上传至新浪
-  		let api = this.api||(await this.getapi())
+  		let api = this.api
+      this.upload_img_progress=0
+      let vm = this
      	return new Promise(async function(reslove,reject){
      		let data = new FormData();
      		data.append("file", file);
@@ -99,6 +103,9 @@ export default {
     				}
     			}
     		}
+        s.upload.onprogress = function(event){
+          vm.upload_img_progress = (event.loaded/event.total)*100
+        }
   			s.send(data);
   	 })
   	},
@@ -175,6 +182,12 @@ export default {
   max-height: 300px;
   max-width: 485px;
   pointer-events: none;
+}
+.main .upload_img .upload_img_example_bg{/*上传进度黑色遮影*/
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(0,0,0,0.5);
 }
 .main .back{
   position: absolute;

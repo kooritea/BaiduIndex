@@ -25,6 +25,19 @@ v1.x 实在太乱了看不下去了
 
 >在找vue-jsonp的资料时，发现好像也有不少人有写自定义百度首页，哈哈
 
+
+头图分别来自
+
+p站大触[雅沫](https://www.pixiv.net/member_illust.php?mode=medium&illust_id=42853451)
+
+KOE
+
+侵删
+
+## 更新日志
+
+2.1.0      添加上传进度提示
+
 ## Build Setup
 
 ``` bash
@@ -42,10 +55,3 @@ npm run build --report
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
-
-头图分别来自
-p站大触[雅沫](https://www.pixiv.net/member_illust.php?mode=medium&illust_id=42853451)
-
-KOE
-
-侵删
