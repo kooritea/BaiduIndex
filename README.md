@@ -8,7 +8,7 @@ v1.x 实在太乱了看不下去了
 
 ## 用法
 
-下载[构建好的文件](https://github.com/kooritea/BaiduIndex/releases/tag/v2.0.2)
+下载[构建好的文件](https://github.com/kooritea/BaiduIndex/releases)
 直接用浏览器打开index.html就可以了，然后添加到标签
 
 推荐使用nginx等静态文件服务器，防止意想不到的错误
@@ -36,7 +36,7 @@ KOE
 
 ## 更新日志
 
-2.1.0      添加上传进度提示
+2.1.0      添加上传图片时进度提示
 
 ## Build Setup
 

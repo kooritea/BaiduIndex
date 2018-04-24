@@ -3,11 +3,13 @@
   <input type="text" name="queryImageUrl" class="input_url" id="input_url" autocomplete="off" placeholder='在此输入图片url' v-model='input_url' v-focus>
   <a v-bind:href="searching"><div class="searching">搜索</div></a>
   <select id="source" class="source" v-model='source'>
-    <option value ="https://image.baidu.com/n/pc_search?queryImageUrl=">百度</option>
+    <option value="https://image.baidu.com/n/pc_search?queryImageUrl=">百度</option>
     <option value="https://images.google.com/searchbyimage?image_url=">Google</option>
-    <option value ="http://saucenao.com/search.php?db=999&url=">sauceNAO</option>
+    <option value="http://saucenao.com/search.php?db=999&url=">sauceNAO</option>
     <option value="http://iqdb.org/?url=">iqdb</option>
     <option value="http://tineye.com/search/?url=">TinEye</option>
+    <option value="http://pic.sogou.com/ris?flag=1&query=">搜狗</option>
+    <option value="https://whatanime.ga/?url=">whatanime</option>
   </select>
   <div id="copyurl" class="copyurl" v-on:click="copyurl()" v-if='input_url'>复制链接</div>
   <div class="prompt" ref="prompt" >复制成功</div>
@@ -136,7 +138,7 @@ export default {
    this.api = await this.getapi()
   },
   watch:{
-    
+
   },
   directives: {
     focus:{
@@ -212,13 +214,15 @@ export default {
   position: absolute;
   right: 0;
   width: 60px;
-  background-color: #97c9eb;
   line-height: 32px;
   top: 0;
   cursor: pointer;
   color: #000;
 }
-.main .copyurl{/*图片搜索按钮*/
+.main .searching:hover{
+  background-color: #97c9eb;
+}
+.main .copyurl{/*图片复制按钮*/
   position: absolute;
   right:70px;
   line-height: 32px;
@@ -243,7 +247,7 @@ export default {
   background: url("../assets/more.svg") no-repeat scroll right center transparent;
   background-size: 20px;
   background-color: #97c9eb;
-  background-position-x:75px; 
+  background-position-x:75px;
   outline: none;
   border: none;
 }
