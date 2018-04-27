@@ -1,5 +1,5 @@
 <template>
-  <form action='https://www.baidu.com/s' id='text_search'>
+  <form action='https://www.baidu.com/s' id='text_search' class="textSerch">
     <input type="text" name="wd" id="input" autocomplete="off" v-model='input' @keyup.up="chighlighted(1)" @keyup.down="chighlighted(0)" v-on:input="getinfo()" v-on:propertychange="getinfo()" v-focus>
     <img class="imgicon" src="../assets/pic.svg" v-on:click="$store.state.search='img'">
     <div class="list" v-on:mousemove='input_status=false'>
@@ -78,14 +78,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.main ul{
+.textSerch ul{
   margin: 0;
   padding:0;
   border-width: 0px 1px 1px 1px;
   border-style: solid;
   border-color: #eee;
 }
-.main li{
+.textSerch li{
   margin: 0;
   padding:0;
   list-style: none;
@@ -95,7 +95,7 @@ export default {
   cursor: pointer;
   font-size: 15px;
 }
-.main .highlighted{
+.textSerch .highlighted{
   background-color: #97c9eb;
 }
 </style>

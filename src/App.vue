@@ -1,11 +1,11 @@
 <template>
   <div id="app" v-on:dragenter="$store.state.search='img'">
-   <div class="main">
+   <div class="moeBg">
     <img class='moe' id = 'img' v-bind:src='moeurl'>
-    <div>
-      <SearchText v-if="$store.state.search==='text'"/>
-      <SearchImg v-if="$store.state.search==='img'"/>
-    </div>
+   </div>
+   <div class="main">
+     <SearchText v-if="$store.state.search==='text'"/>
+     <SearchImg v-if="$store.state.search==='img'"/>
    </div>
   </div>
 </template>
@@ -28,7 +28,7 @@ export default {
     }
   },
   methods:{
-    
+
   },
   mounted(){
     this.moeurl = this.moe[((Math.floor(Math.random()*10)>4)?1:0)]
@@ -46,15 +46,26 @@ body{
   height: 100vh;
   min-width: 820px;
 }
-.main{
+/* .main{
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
+} */
+.moeBg{
+  text-align: center;
 }
-.main .moe{
+.moeBg .moe{
+  position: relative;
+  margin:0 auto;
   max-width: 350px;
   max-height: 350px;
+}
+.main{
+  position: relative;
+  margin:0 auto;
+  width: 612px;
+  text-align: center;
 }
 .main form{
   position: relative;
