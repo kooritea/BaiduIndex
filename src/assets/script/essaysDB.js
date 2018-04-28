@@ -79,7 +79,9 @@ function del(storeName,key,value){
       request.onsuccess = function(e){
         let cursor = e.target.result;
         if(cursor){
-          objectStore.delete(parseInt(cursor.value[objectStore.keyPath]));
+          if(cursor.value[key] === value){
+            objectStore.delete(parseInt(cursor.value[objectStore.keyPath]));
+          }
           cursor.continue();
         }
         else{
@@ -100,12 +102,13 @@ function edit(storeName,key,value,newValue){
   let objectStore = transaction.objectStore(storeName);
   let objectStoreRequest
   return new Promise(async function(reslove){
+    console.log(objectStore)
     if(key ===  objectStore.keyPath){
       objectStoreRequest = objectStore.get(parseInt(value));
 
     }
     else{
-      objectStoreRequest = objectStore.index(key);
+      objectStoreRequest = objectStore.index(key).get(value);
     }
     objectStoreRequest.onsuccess = function(){
       let Record = objectStoreRequest.result||{}
@@ -116,6 +119,7 @@ function edit(storeName,key,value,newValue){
       }
       reslove(objectStore.put(Record))
     }
+    console.log(objectStoreRequest)
   })
 }
 
@@ -153,8 +157,6 @@ async function openDB(name,newIndex){//name有两个传入方式 1:直接传入�
           }
         }
         catch(e){
-          console.log('初始化错误')
-          console.log(e)
         }
       }
       setTimeout(function(){

@@ -12,7 +12,7 @@
        <option value="http://pic.sogou.com/ris?flag=1&query=">搜狗</option>
        <option value="https://whatanime.ga/?url=">whatanime</option>
      </select>
-     <div id="copyurl" class="copyurl" v-on:click="copyurl()" v-if='input_url'>复制链接</div>
+     <div id="copyurl" class="copyurl" v-on:click="copyurl(input_url)" v-if='input_url'>复制链接</div>
      <div class="prompt" ref="prompt" >复制成功</div>
      <div style="position: relative;">
        <label for="selectfile" class="selectfile">
@@ -36,8 +36,16 @@
        <div class="placeholder">
          <!-- 占位用 -->
        </div>
-       <div class="son" v-for="(item,index) in filterlist" :key="index">
-         <img v-bind:src="'https://ww2.sinaimg.cn/mw690/'+item.pid">
+       <div class="son" v-on:click="item.meau = true" v-for="(item,index) in filterhistory" :key="index">
+         <img v-bind:src="'http://ww2.sinaimg.cn/mw690/'+item.pid">
+         <div class="filter" v-if="!item.show"></div>
+         <div class="meau" v-if="item.meau" v-on:mouseleave.self="item.meau=false">
+           <div v-on:click="copyurl('http://ww2.sinaimg.cn/large/'+item.pid)">复制链接</div>
+           <div>查看大图</div>
+           <div v-if="item.show" v-on:click="setShow(item,false)">隐藏</div>
+           <div v-else="item.show" v-on:click="setShow(item,true)">取消隐藏</div>
+           <div v-on:click="delHistory(item)">删除</div>
+         </div>
        </div>
        <div class="placeholder">
          <!-- 占位用 -->
@@ -60,7 +68,14 @@ export default {
       upload_img_progress:0,//上传进度
       source:'https://image.baidu.com/n/pc_search?queryImageUrl=', //搜索源
       prompt:null,
-      history:[],
+      history:[
+        // {
+        //   pid:"",
+        //   show:true,
+        //   meau:false
+        // }
+      ],
+      hidden:false,//是否隐藏被隐藏的图片
       DB:null
     }
   },
@@ -73,8 +88,15 @@ export default {
   			return '#'
   		}
   	},
-    filterlist(){
-      return this.history
+    filterhistory(){
+      if(this.hidden){
+        return this.history.filter(function(history){
+					return history.show === true
+				})
+      }
+      else{
+        return this.history
+      }
     }
   },
   methods:{
@@ -107,7 +129,7 @@ export default {
       this.upload_img_logo = true;
   	},
   	async up(file){//上传至新浪
-  		let api = this.api
+  		let api = this.api||await this.getapi()
       this.upload_img_progress=0
       let vm = this
      	return new Promise(async function(reslove){
@@ -133,20 +155,36 @@ export default {
   			s.send(data);
   	 })
   	},
+    setShow(item,val){
+      let index = this.history.indexOf(item)
+      this.history[index].show = val;
+      this.DB.edit('history','pid',this.history[index].pid,{show:val})
+    },
+    delHistory(item){
+      let index = this.history.indexOf(item)
+      this.DB.del('history','pid',this.history[index].pid)
+      this.history.splice(index,1)
+    },
     async save(pid){
-      this.history.push({pid:pid})
-      await this.DB.push('history',{pid:pid})
+      let data = {
+        pid:pid,
+        show:true,
+        meau:false
+      }
+      this.history.push(data)
+      await this.DB.push('history',data)
     },
     async load(){
       this.history = await this.DB.get('history')
     },
-    async copyurl(){
-      let url = this.input_url
-      new Clipboard('.copyurl',{
+    copyurl(url){
+      let div = document.createElement('div')
+      new Clipboard(div ,{
         text:function(trigger){
           return url
         }
       })
+      div.click()
       this.showprompt('复制成功')
     },
     async showprompt(prompt){
@@ -160,7 +198,8 @@ export default {
       this.$refs.prompt.style.opacity=0
     },
   	async getapi(){//获取上传地址
-  		return 'http://'+(await this.axios.get('http://danmu.fm/api/hosts')).data.cmcc.match(/[\d\.]+/)+':672/v1/upload';
+      this.api = 'http://'+(await this.axios.get('http://danmu.fm/api/hosts')).data.cmcc.match(/[\d\.]+/)+':672/v1/upload';
+  		return this.api
   	},
     async initDB(){
       let newIndex = {
@@ -168,6 +207,9 @@ export default {
             indexs:[
               {
                 name:"pid"
+              },
+              {
+                name:"show"
               }
             ],
             option:{
@@ -180,7 +222,6 @@ export default {
     }
   },
   async mounted(){
-   this.api = await this.getapi()
    this.initDB()
   },
   watch:{
@@ -320,33 +361,69 @@ export default {
   top:0;
   height: 100vh;
   overflow-y: auto;
-  max-width: 250px;
+  max-width: 200px;
 }
-/* .imgSearch .history .list{
-  width: 250px;
-  height: 100vh;
-  overflow-x: visible;
-} */
 .imgSearch .history::-webkit-scrollbar{
   display:none;
 }
 .imgSearch .history .son{
   cursor: pointer;
   position: relative;
-  width: 200px;
+  width: 150px;
   float: right;
+  overflow: hidden;
 }
 .imgSearch .history .son:hover{
-  width: 250px;
+  width: 200px;
 }
 .imgSearch .history .son img{
   width: 100%;
   display: block;
   position: relative;
+  user-select: none;
+}
+.imgSearch .history .son .filter{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(255,255,255,0.8)
+}
+.imgSearch .history .son .meau{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  background-color: rgba(0,0,0,0.5);
+  animation: showmeau 0.2s forwards;
+}
+.imgSearch .history .son .meau div{
+  color: #fff;
+  font-size: 20px;
+  width: 50%;
+  height: 50%;
+  float: left;
+  font-size: 15px;
+}
+.imgSearch .history .son .meau div:hover{
+  background-color: #97c9eb;
+  color: #000;
+}
+.imgSearch .history .son .meau div:after{
+  display:inline-block;
+  width:0;
+  height:100%;
+  vertical-align:middle;
+  content:"";
+}
+@keyframes showmeau {
+  from{top:-100%}
+  to{top:0}
 }
 .imgSearch .history .placeholder{
   height: 40vh;
-  float: left;
-  width: 100%;
+  float: right;
+  width: 150px;
 }
 </style>
