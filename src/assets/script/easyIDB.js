@@ -1,8 +1,8 @@
 'use strict'
 
-export default async function(name,newIndex){
+async function easyIDBMain(name,newIndex){
   return {
-    DB:await openDB(name,newIndex),
+    DB:name?(await openDB(name,newIndex)):null,
     openDB,
     showList,
     createObjectStore,
@@ -96,13 +96,12 @@ function del(storeName,key,value){
 // storeName:string
 // key索引名
 // value 索引值
-// newValue:{}需要跟新的数据
-function edit(storeName,key,value,newValue){
+// newObject:{}需要更新的数据
+function edit(storeName,key,value,newObject){
   let transaction = this.DB.transaction(storeName, "readwrite");
   let objectStore = transaction.objectStore(storeName);
   let objectStoreRequest
   return new Promise(async function(reslove){
-    console.log(objectStore)
     if(key ===  objectStore.keyPath){
       objectStoreRequest = objectStore.get(parseInt(value));
 
@@ -112,29 +111,30 @@ function edit(storeName,key,value,newValue){
     }
     objectStoreRequest.onsuccess = function(){
       let Record = objectStoreRequest.result||{}
-      for(let key in newValue){
+      for(let key in newObject){
         if (typeof Record[key] != 'undefined') {
-           Record[key] = newValue[key];
+           Record[key] = newObject[key];
         }
       }
       reslove(objectStore.put(Record))
     }
-    console.log(objectStoreRequest)
   })
 }
 
 
 // name有两个传入方式 1:直接传入数据库名字,2:对象{name:'xxx',ver:2}
-// newIndex:{  // 创建新的objectStore
-//   name:"xxx",
-//   indexs:[],
-//   option:{
-//     keyPath:'id',
-//     autoIncrement:true
-//   }
-// }
+// newIndexs:[
+//   {  // 创建新的objectStore
+//      name:"xxx",
+//      indexs:[],
+//      option:{
+//        keyPath:'id',
+//        autoIncrement:true
+//      }
+//    }
+// ]
 //创建
-async function openDB(name,newIndex){//name有两个传入方式 1:直接传入数据库名字,2:对象{name:'xxx',ver:2}
+async function openDB(name,newIndexs){//name有两个传入方式 1:直接传入数据库名字,2:对象{name:'xxx',ver:2}
   return await (new Promise(async function(reslove,reject){
     let indexedDB = window.indexedDB;
     if(typeof(name) === 'string'){
@@ -144,19 +144,22 @@ async function openDB(name,newIndex){//name有两个传入方式 1:直接传入�
     }
     indexedDB.onupgradeneeded = function (event) {
       let db = event.target.result
-      if(newIndex){
+      if(newIndexs){
         try{
-          let objectStore = db.createObjectStore(newIndex.name,{
-            keyPath: newIndex.option.keyPath||'id',
-            autoIncrement: newIndex.option.autoIncrement || true
-          })
-          for(let item in newIndex.indexs){
-            objectStore.createIndex(newIndex.indexs[item].name, newIndex.indexs[item].name, {
-                unique: newIndex.indexs[item].unique||false
-            });
+          for(let newIndex of newIndexs){
+            let objectStore = db.createObjectStore(newIndex.name,{
+              keyPath: newIndex.option.keyPath||'id',
+              autoIncrement: newIndex.option.autoIncrement || true
+            })
+            for(let item in newIndex.indexs){
+              objectStore.createIndex(newIndex.indexs[item].name, newIndex.indexs[item].name, {
+                  unique: newIndex.indexs[item].unique||false
+              });
+            }
           }
         }
         catch(e){
+
         }
       }
       setTimeout(function(){
@@ -168,3 +171,20 @@ async function openDB(name,newIndex){//name有两个传入方式 1:直接传入�
     }
   }))
 }
+
+//tank you for async
+// AMD / RequireJS
+if (typeof define !== 'undefined' && define.amd) {
+    define([], function () {
+        return easyIDBMain;
+    });
+}
+// Node.js
+else if (typeof module !== 'undefined' && module.exports) {
+    module.exports.default = easyIDBMain;
+}
+// included directly via <script> tag
+else {
+
+}
+export default easyIDBMain

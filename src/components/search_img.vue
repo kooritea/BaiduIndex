@@ -56,7 +56,7 @@
 </template>
 <script>
 import Clipboard from 'clipboard';
-import esaysDB from '../assets/script/essaysDB.js'
+import easyIDB from '../assets/script/easyIDB.js'
 export default {
   name: 'SearchImg',
   data () {
@@ -161,6 +161,9 @@ export default {
       this.DB.edit('history','pid',this.history[index].pid,{show:val})
     },
     delHistory(item){
+      if(!confirm("你确认要删除这条历史吗？")){
+        return
+      }
       let index = this.history.indexOf(item)
       this.DB.del('history','pid',this.history[index].pid)
       this.history.splice(index,1)
@@ -202,7 +205,8 @@ export default {
   		return this.api
   	},
     async initDB(){
-      let newIndex = {
+      let newIndexs = [
+          {
             name:"history",
             indexs:[
               {
@@ -217,7 +221,8 @@ export default {
               autoIncrement:true
             }
           }
-      this.DB = await esaysDB('history',newIndex);
+        ]
+      this.DB = await easyIDB('history',newIndexs);
       this.load();
     }
   },
