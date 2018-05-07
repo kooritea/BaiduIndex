@@ -17,7 +17,7 @@ v1.x 实在太乱了看不下去了
 ![pic](http://ww2.sinaimg.cn/large/005zWjpngy1fp0plow4s7j31gb0prtax)
 ![pic](http://ww2.sinaimg.cn/large/005zWjpngy1fp0pn48g0bj31gf0prdii)
 
-#### 碎碎念
+## 碎碎念
 
 >~~现阶段master分支和v1.x分支功能基本一样，甚至1.x性能更好~~
 
@@ -26,19 +26,26 @@ v1.x 实在太乱了看不下去了
 >在找vue-jsonp的资料时，发现好像也有不少人有写自定义百度首页，哈哈
 
 
-头图分别来自
+## 头图分别来自
 
-p站大触[雅沫](https://www.pixiv.net/member_illust.php?mode=medium&illust_id=42853451)
+p站大触 [雅沫](https://www.pixiv.net/member_illust.php?mode=medium&illust_id=42853451)
 
 KOE
 
 侵删
 
+## 感谢以下的开源项目 ><
+
+[Clipboard](https://github.com/zenorocha/clipboard.js)
+
 ## 更新日志
+
+2.2.0      上传图片后有历史记录
 
 2.1.0      添加上传图片时进度提示
 
 ## Build Setup
+需要node环境
 
 ``` bash
 # install dependencies
