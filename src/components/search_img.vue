@@ -41,7 +41,7 @@
          <div class="filter" v-if="!item.show"></div>
          <div class="meau" v-if="item.meau" v-on:mouseleave.self="item.meau=false">
            <div v-on:click="copyurl('http://ww2.sinaimg.cn/large/'+item.pid)">复制链接</div>
-           <div>查看大图</div>
+           <div v-on:click="view(item.pid)">查看大图</div>
            <div v-if="item.show" v-on:click="setShow(item,false)">隐藏</div>
            <div v-else="item.show" v-on:click="setShow(item,true)">取消隐藏</div>
            <div v-on:click="delHistory(item)">删除</div>
@@ -50,6 +50,9 @@
        <div class="placeholder">
          <!-- 占位用 -->
        </div>
+    </div>
+    <div class="imgView" v-if="imgView" v-on:click="imgView=false">
+      <img v-bind:src="imgViewSrc" />
     </div>
   </div>
 
@@ -76,7 +79,9 @@ export default {
         // }
       ],
       hidden:false,//是否隐藏被隐藏的图片
-      DB:null
+      DB:null,
+      imgView:false,
+      imgViewSrc:""
     }
   },
   computed:{
@@ -179,6 +184,10 @@ export default {
     },
     async load(){
       this.history = await this.DB.get('history')
+    },
+    view(pid){
+      this.imgViewSrc = `http://ww2.sinaimg.cn/large/${pid}`
+      this.imgView = true
     },
     copyurl(url){
       let div = document.createElement('div')
@@ -430,5 +439,21 @@ export default {
   height: 40vh;
   float: right;
   width: 150px;
+}
+.imgSearch .imgView{
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background-color: rgba(0,0,0,0.5);
+}
+.imgSearch .imgView img{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  max-width: 100%;
+  max-height: 100%;
 }
 </style>
