@@ -32,12 +32,12 @@
        </div>
      </div>
    </form>
-   <div class="history">
+   <div class="history" ref='history'>
        <div class="placeholder">
          <!-- 占位用 -->
        </div>
        <div class="son" v-on:click="item.meau = true" v-for="(item,index) in filterhistory" :key="index">
-         <img v-bind:src="'http://ww2.sinaimg.cn/mw690/'+item.pid">
+         <img v-bind:src="'http://ww2.sinaimg.cn/mw690/'+item.pid" v-on:load="setScroll">
          <div class="filter" v-if="!item.show"></div>
          <div class="meau" v-if="item.meau" v-on:mouseleave.self="item.meau=false">
            <div v-on:click="copyurl('http://ww2.sinaimg.cn/large/'+item.pid)">复制链接</div>
@@ -184,6 +184,9 @@ export default {
     },
     async load(){
       this.history = await this.DB.get('history')
+      this.$nextTick(()=>{
+        this.setScroll()
+      })
     },
     view(pid){
       this.imgViewSrc = `http://ww2.sinaimg.cn/large/${pid}`
@@ -198,6 +201,18 @@ export default {
       })
       div.click()
       this.showprompt('复制成功')
+    },
+    setScroll(){
+      let vm = this
+      let setScroll = function(){
+        setTimeout(function(){//抱歉，我不知道为什么这里没有按照预想中的更新视图后修改滚动条的高度，只能用延时了
+          if(vm.$refs.history.scrollTop + vm.$refs.history.offsetHeight !== vm.$refs.history.scrollHeight){
+            vm.$refs.history.scrollTop = vm.$refs.history.scrollHeight;//给各位前段丢脸了
+            setScroll()
+          }
+        },100)
+      }
+      setScroll()
     },
     async showprompt(prompt){
       this.prompt=prompt
