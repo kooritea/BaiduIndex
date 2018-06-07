@@ -1,6 +1,6 @@
 <template>
-  <form action='https://www.baidu.com/s' id='text_search' class="textSerch">
-    <input type="text" name="wd" id="input" autocomplete="off" v-model='input' @keyup.up="chighlighted(1)" @keyup.down="chighlighted(0)" v-on:input="getinfo()" v-on:propertychange="getinfo()" v-focus>
+  <form v-bind:action='source' id='text_search' class="textSerch">
+    <input type="text" v-bind:name="key" id="input" autocomplete="off" v-model='input' @keyup.up="chighlighted(1)" @keyup.down="chighlighted(0)" v-on:input="getinfo()" v-on:propertychange="getinfo()" v-focus>
     <img class="imgicon" src="../assets/pic.svg" v-on:click="$store.state.search='img'">
     <div class="list" v-on:mousemove='input_status=false'>
       <ul id='list' v-on:mouseout="highlightedb=highlighted;highlighted=(-1)">
@@ -23,8 +23,24 @@ export default {
       input_status:false//再输入状态时为true,防止在输入时鼠标触碰suggets
     }
   },
+  props: ['sourceName'],
   computed:{
-
+    source(){
+      switch(this.sourceName){
+        case 'google':
+          return 'https://www.google.com/search'
+        case 'baidu':
+          return 'https://www.baidu.com/s'
+      }
+    },
+    key(){
+      switch(this.sourceName){
+        case 'google':
+          return 'q'
+        case 'baidu':
+          return 'wd'
+      }
+    }
   },
   methods:{
     chighlighted(type){//更改高亮位置
@@ -44,7 +60,7 @@ export default {
       }
     },
     submit(){
-      location.href='https://www.baidu.com/s?wd='+this.input
+      location.href=`${this.source}?${this.key}=${this.input}`
     },
     async getinfo(){//获取百度suggets
       this.input_status=true;

@@ -1,10 +1,10 @@
 <template>
   <div id="app" v-on:dragenter="$store.state.search='img'">
    <div class="moeBg">
-    <img class='moe' id = 'img' v-bind:src='moeurl'>
+    <img v-on:click="changeSource" draggable="false" class='moe' id = 'img' v-bind:src='moeurl'>
    </div>
    <div class="main">
-     <SearchText v-if="$store.state.search==='text'"/>
+     <SearchText v-bind:sourceName="source" v-if="$store.state.search==='text'"/>
      <SearchImg v-if="$store.state.search==='img'"/>
    </div>
   </div>
@@ -15,6 +15,7 @@ import SearchText from './components/search_text'
 import SearchImg from './components/search_img'
 import moe1 from './assets/moe1.png'
 import moe2 from './assets/moe2.png'
+import moe3 from './assets/moe3.png'
 export default {
   name: 'App',
   components: {
@@ -23,16 +24,26 @@ export default {
   },
   data(){
     return {
-      moeurl:null,
+      source:localStorage.source||'google',
       moe:[moe1,moe2]
     }
   },
+  computed:{
+    moeurl(){
+      switch(this.source){
+        case 'google':
+          return moe3
+        case 'baidu':
+          return this.moe[((Math.floor(Math.random()*10)>4)?1:0)]
+      }
+    }
+  },
   methods:{
-
-  },
-  mounted(){
-    this.moeurl = this.moe[((Math.floor(Math.random()*10)>4)?1:0)]
-  },
+    changeSource(){
+      this.source = this.source === 'google'?'baidu':'google'
+      localStorage.source = this.source
+    }
+  }
 }
 </script>
 
@@ -58,8 +69,8 @@ body{
 .moeBg .moe{
   position: relative;
   margin:0 auto;
-  max-width: 350px;
-  max-height: 350px;
+  height: 350px;
+  user-select: none;
 }
 .main{
   position: relative;
