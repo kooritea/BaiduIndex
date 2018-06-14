@@ -37,7 +37,7 @@
          <!-- 占位用 -->
        </div>
        <div class="son" v-on:click="item.meau = true" v-for="(item,index) in filterhistory" :key="index">
-         <img v-bind:src="'http://ww2.sinaimg.cn/mw690/'+item.pid" v-on:load="setScroll">
+         <img v-bind:src="'http://ww2.sinaimg.cn/mw690/'+item.pid" v-on:error="item.pid='005zWjpngy1fqfxazqlx2j308k08k75v'" v-on:load="setScroll">
          <div class="filter" v-if="!item.show"></div>
          <div class="meau" v-if="item.meau" v-on:mouseleave.self="item.meau=false">
            <div v-on:click="copyurl('http://ww2.sinaimg.cn/large/'+item.pid)">复制链接</div>
